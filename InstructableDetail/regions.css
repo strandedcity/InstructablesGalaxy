@@ -1,0 +1,178 @@
+/*font-family: 'Abel', sans-serif;*/
+/*font-family: 'Lato', sans-serif;*/
+/*font-family: 'Roboto Condensed', sans-serif;*/
+/*font-family: 'Roboto Slab', serif;*/
+body {
+    margin: 0px;
+    font-family: 'Lato';
+    font-size: 16px;
+    overflow: hidden;
+    cursor: none;
+}
+div {
+    cursor: none;
+}
+
+img {
+    max-width: 350px;
+}
+a {
+    text-decoration: none;
+    color: black;
+    cursor: none;
+}
+
+
+#source {
+    /*-webkit-flow-into: main;*/
+
+    text-align: justify;
+    line-height: 1.4em;
+    margin: 0;
+    -webkit-hyphens: auto;
+}
+
+
+.contentContainer {
+    /*background-color: white;*/
+    /*height: 600px;*/
+    /*top: 10px;*/
+    /*left: 10px;*/
+    /*position: relative;*/
+    /*overflow-x: visible;*/
+
+    background-color: white;
+    height: 250px;
+    left: 10px;
+    margin-top: 340px;
+    position: relative;
+    overflow-x: visible;
+    width: 700000000px;
+    overflow-y: visible;
+    -webkit-column-width: 350px;
+    -webkit-column-gap: 35px;
+}
+.endStamp {
+    position: relative;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    float: right;
+}
+.containerContainer {
+    overflow: hidden;
+    display: block;
+    position: relative;
+}
+#clearCover {
+    background-color: transparent;
+    height: 600px;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: 7000px;
+}
+.bodyText {
+    -webkit-flow-from: main;
+
+
+    /*background-color: #FFF;*/
+    /*width: 350px;*/
+    /*height: 100%;*/
+    /*position: relative;*/
+    /*display: inline-block;*/
+    /*margin-left: 35px;*/
+    /*vertical-align: top;*/
+}
+div.bodyText.intro {
+    margin-top: -18px;
+}
+
+ div.instructableTitleBlock {
+    font-size: 3.5em;
+}
+div.instructableTitleImage {
+
+}
+div.stepTitle {
+    display: inline-block;
+    width: 330px;
+    margin: 0px 20px 20px 0px;
+    text-align: left;
+    line-height: 1.2em;
+    font-size: 36px;
+    font-family:    'Roboto Condensed';
+
+    /*-webkit-region-break-before: always;*/
+}
+div.stepText {
+    padding-bottom: 15px;;
+}
+div.stepTitle.intro {
+    display: block;
+    margin: 10px 20px 0px 20px;
+    width: 85%;
+}
+div.byline {
+    line-height: 20px;
+    margin-left: 20px;
+    font-size: 13px;
+}
+div.stepText.intro {
+    margin-top: 30px;
+}
+ div.stepText.intro:first-letter {
+    float: left;
+    color: #D86800;
+    font-size: 72px;
+    line-height: 16px;
+    padding-top: 26px;
+    margin-top: 7px;
+    padding-bottom: 20px;
+    padding-right: 8px;
+    font-family: Georgia;
+}
+.firstBlock {
+    height: 100%;
+    width: 500px;
+    display: inline-block;
+    position: relative;
+}
+.firstImage {
+    height: 300px;
+    overflow: hidden;
+    background-color: #DDD;
+    background-size: cover;
+    background-repeat:no-repeat;
+    background-position: center center;
+}
+.stepImage {
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.firstColumn {
+    -webkit-flow-from: main;
+    max-height: 160px;
+}
+.firstColumn div.stepTitle {
+    font-size: 2em;;
+}
+
+
+.stepImageBlock {
+    display: block;
+    position: absolute;
+    top: 10px;
+    height: 320px;
+    overflow: hidden;
+}
+.stepImageBlock img {
+    margin-right: 5px;
+    display: inline-block;
+    position: relative;
+    max-width: none;
+    height: 100%;
+}

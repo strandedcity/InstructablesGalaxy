@@ -1,0 +1,397 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+body.ready {
+    background-color: #222;
+}
+.ready #three-canvas {
+    display: block;
+}
+.hiddenCursor {cursor: none !important;}
+
+#relatedNotes img {
+    width: 140px;
+    height: 140px;
+    display: block;
+    margin-right: 30px;
+    left: 0px;
+    border: 0px;
+    background-color: transparent;
+    float: left;
+}
+
+div#relatedNotes {
+    height: 200px;
+    width: 100%;
+    border: 30px solid transparent;
+    text-align: justify;
+    box-sizing: border-box;
+    color: #999;
+    font-size: 11px;
+    overflow: hidden;
+    bottom: 0px;
+    left: 0px;
+    position: absolute;
+    z-index: 2;
+    line-height: 14px;
+}
+
+#notesRight {
+    float: right;
+    width: 50%;
+    /*display: none;*/
+    margin-left: 30px;
+}
+#notesLeft {
+    display: inline;
+    position: relative;
+    margin-left: 0px;
+    margin-right: 30px;
+}
+
+div#relatedNotes strong {
+    color: white;
+}
+
+div#relatedNotes span.footnote {
+    font-style: italic;
+    font-size: 9px;
+    vertical-align: top;
+    margin-left: 5px;
+    margin-right: 3px;
+    color: white;
+}
+
+div#container {
+    position: absolute;
+    top: 0px;
+}
+div#processingjsContainer {
+    position: absolute;
+    background-color: rgb(29,29,29);
+}
+
+/* Toolbar */
+.uiContainer {
+    background-color: rgba(0, 6, 51, 0.5);
+    border: 2px solid whitesmoke;
+    box-shadow: 0 0 17px 0 whitesmoke;
+    border-radius: 30px;
+}
+#toolbar {
+    cursor: pointer;
+    width: 120px;
+    margin-left: -60px;
+    height: 60px;
+    display: inline-block;
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    left: 50%;
+
+    border-top: none;
+    border-radius: 0 0 30px 30px;
+}
+#toolbar a.toolbarButton {
+    line-height: 53px;
+    text-decoration: none;
+    color: white;
+    font-family: helvetica,arial,sans-serif;
+    font-size: 21px;
+    font-weight: lighter;
+}
+#toolbar a.toolbarButton.left {
+    position: absolute;
+    left: 40px;
+}
+#toolbar a.toolbarButton.right {
+    position: absolute;
+    right: 40px;
+}
+
+/*Search Type Modal*/
+.backdrop {
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+.backdrop.fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+     -moz-transition: opacity 0.15s linear;
+       -o-transition: opacity 0.15s linear;
+          transition: opacity 0.15s linear;
+}
+
+.backdrop.fade.in {
+  opacity: 1;
+}
+.modalBox {
+    z-index: 3;
+    position: absolute;
+    height: 400px;
+    width: 720px;
+    left: 50%;
+    margin-left: -360px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 360px;
+}
+.modalBox.fade {
+    top: -25%;
+    opacity: 0;
+  -webkit-transition: opacity 0.3s linear, top 0.3s ease-out;
+     -moz-transition: opacity 0.3s linear, top 0.3s ease-out;
+       -o-transition: opacity 0.3s linear, top 0.3s ease-out;
+          transition: opacity 0.3s linear, top 0.3s ease-out;
+}
+
+.modalBox.fade.in {
+  top: 15%;
+    opacity: 1;
+}
+.modalBox a.channelLink {
+    color: white;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 10px;
+    display: block;
+    line-height: 25px;
+    text-decoration: none;
+    text-align: left;
+}
+.modalBox.categoryList {
+    -webkit-columns: 9;
+    width: 1200px;
+    margin-left: -600px;
+    box-sizing: border-box;
+    padding: 30px;
+    height: 525px;
+}
+#searchSelectionBox a.searchTypeButton {
+    width: 170px;
+    height: 170px;
+    margin: 20px;
+    background-color: black;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 160px;
+    color: white;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-weight: lighter;
+}
+.searchForm {
+    left: 20px;
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+}
+.titleLine {
+    top: 20px;
+}
+.promptLine {
+    top: 65px;
+}
+#searchInput {
+    position: absolute;
+    top: 60px;
+    right: 25px;
+    width: 617px;
+    height: 30px;
+    border-radius: 90px;
+    font-size: 20px;
+    padding-left: 20px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.42) !important;
+    /* border-color: black; */
+    border: none;
+    color: rgba(255,255,255,0.7);
+    outline: none;
+    line-height: 30px;
+}
+#searchInput::-webkit-input-placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+#searchInput:focus {
+    box-shadow: 0 0 10px 0 white;
+}
+
+.instructableWindow {
+    position: absolute;
+    left: 50%;
+    margin-left: -510px;
+    width: 1000px;
+    height: 600px;
+    background-color: white;
+    z-index: 5;
+    border: 10px solid white;
+    border-radius: 30px;
+    -webkit-box-shadow: 0 0 10px white;
+}
+.instructableWindow.fade {
+    top: -25%;
+    opacity: 0.2;
+  -webkit-transition: opacity 0.3s linear, top 0.3s ease-out;
+     -moz-transition: opacity 0.3s linear, top 0.3s ease-out;
+       -o-transition: opacity 0.3s linear, top 0.3s ease-out;
+          transition: opacity 0.3s linear, top 0.3s ease-out;
+}
+
+.instructableWindow.fade.in {
+    top: 10%;
+    opacity: 1;
+}
+
+.instructableWindow iframe {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* version 2.0! */
+iframe,embed,object {
+    max-width: 360px;
+}
+.popover {
+    max-width: 400px;
+    width: 400px;
+}
+.popover.fade.out {
+    display: none !important;
+}
+.popover-title {
+    border-bottom: 1px solid #CCC;
+}
+.popover-content {
+    font-size: 10px;
+    margin-bottom: 35px;
+}
+.scrollable {
+    overflow: hidden;
+    max-height: 370px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.galaxy_button_bar {
+    padding: 5px;
+    position: absolute;
+    left: 0px;
+}
+div.threejs-project-anchor {
+    position:absolute;
+}
+img.project-thumb {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+}
+div.project-title-box {
+    vertical-align: top;
+    display: inline-block;
+    max-width: 280px;
+}
+.project-title-box h4 {
+    margin: 0px;
+}
+
+/*Small project Markers*/
+.marker {
+    margin: 0px;
+    padding: 0px;
+    height: 60px;
+    display: block;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    color: white;
+}
+.marker .centerer {
+    box-sizing: initial !important; /* Needed to prevent when bootstrap's "in" class is applied later */
+    -webkit-box-sizing: initial !important;
+    -moz-box-sizing: initial !important;
+    position: absolute;
+    top: -9px;
+    left: -9px;
+    width: 14px;
+    height: 14px;
+    border-radius: 10px;
+    border: 2px solid white;
+    box-shadow: 0px 0px 4px 2px rgba(255,255,255,0.8), 0px 0px 8px 5px rgba(0,0,0,0.2);
+}
+.marker:after {
+    content:" ";
+    display:block;
+    width: 100%;
+    border-bottom: 2px solid white;
+    box-shadow: 0px 0px 4px 2px rgba(255,255,255,0.5);
+    left: 9px;
+    top: -1px;
+    position: absolute;
+}
+.marker .title {
+    position: relative;
+    max-width: 250px;
+    min-width: 80px;
+    left: 10px;
+    margin-left: 5px;
+    margin-top: -16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0px 0px 8px black,0px 0px 8px black;
+}
+.marker img {
+    right: 0px;
+    margin-right: -8px;
+    position: absolute;
+    top: 1px;
+    max-width: 80px;
+    z-index: 2;
+    box-shadow: 0px 1px 4px 2px rgba(255,255,255,0.8);
+}
+
+/* Status Indicator */
+.statusIndicator {
+    position: fixed;
+    top: 0px;
+    left: 20px;
+    text-align: left;
+}
+
+/* Slideshow */
+.slideshow {
+    position: relative;
+    width: 368px;
+    height: 260px;
+    margin-bottom: 20px;
+    display: block;
+}
+.slideshow img {
+    max-width: 368px;
+    max-height: 260px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*box-shadow: 0px 0px 8px 5px rgba(0,0,0,0.8);*/
+}

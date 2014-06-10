@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="scripts/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="scripts/underscore-min.js" type="text/javascript"></script>
+<script src="scripts/moment.min.js" type="text/javascript"></script>
+<link href='http://fonts.googleapis.com/css?family=Abel|Lato|Roboto+Condensed|Roboto+Slab&subset=latin,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek,vietnamese' rel='stylesheet' type='text/css'>
+<link href='regions.css?t=1234' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div id="source"></div>
+    <div class="overscroller">
+    <div class="containerContainer">
+    <div class="contentContainer">
+    </div>
+    </div>
+    </div>
+</body>
+<script src="scripts/jquery.overscroll.js" type="text/javascript"></script><!--Adds an extra body tag if included in head (??) -->
+<script type="text/javascript">
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    $(document).ready(function(){
+
+        var layoutInstructable = function(ible){
+            var $textBucket = $('.contentContainer');
+            var introStep = ible.steps[0];
+            $('.firstImage').css({
+                "background-image": "url("+ introStep.files[0].largeUrl +")"
+            });
+            $textBucket.append($("<div class='stepTitle intro'>"+introStep.title+"</div>"));
+            $textBucket.append($("<div class='byline'>by "+ible.author.screenName + "<br />" + moment(ible.publishDate,"YYYY-MM-DD HH:mm:ss.SSS").format("MMMM Do, YYYY")+"</div>" ));
+            $textBucket.append($("<div class='stepText intro'>"+introStep.body+"</div> "));
+
+
+            // Append all the steps' titles and bodies
+            _.each(ible.steps,function(step, index){
+                if (index == 0) return;
+                var stepTitleBlock = $("<div class='stepTitle step"+index+"'>"+step.title+"</div>");
+                var stepBodyBlock = $("<div class='stepText'>"+step.body+"</div> ");
+
+                $textBucket.append(stepTitleBlock);
+                $textBucket.append(stepBodyBlock);
+            });
+
+            $textBucket.append($('<div class="endStamp"></div>'));
+
+            _.defer(function(){
+                $('img').removeAttr("style").removeAttr("width").removeAttr("height");
+                $textBucket.find('[width]').not('img').each(function(idx,el){
+                    console.log(el);
+                    var newHeight = $(el).height()*(350/$(el).width()), newWidth = 350;
+                    $(el).removeAttr("width").removeAttr("height").css({
+                        width: newWidth,
+                        height: newHeight
+                    });
+                });
+            });
+
+            _.delay(function(){
+                var width = $('.endStamp').offset().left;
+
+                $('div.containerContainer').css({
+                    width: (width+50).toString()+"px"
+                });
+
+                $('div.overscroller').overscroll({
+                    direction: 'horizontal'
+                });
+
+                // All the big parts are set, find where all the steps start and load in images.
+                var priorRightEdge = $('div.stepTitle.intro').first().offset().left;
+                _.each(ible.steps, function(step,index){
+                    var stepTextStartPosition = $('.step'+index).first().offset();
+
+                    if (index != 0) {
+                        var stepImageBlock = $('<div class="stepImageBlock step'+(index-1)+'"></div>').css({
+                            left: priorRightEdge,
+                            width: stepTextStartPosition.left - priorRightEdge-5
+                        });
+                        $('.containerContainer').append(stepImageBlock);
+
+                        priorRightEdge = stepTextStartPosition.left;
+                    }
+                });
+
+                // append last image block, too:
+                var stepImageBlock = $('<div class="stepImageBlock step'+(ible.steps.length-1)+'"></div>').css({
+                    left: priorRightEdge,
+                    width: $('.endStamp').first().offset().left - priorRightEdge-5
+                });
+                $('.containerContainer').append(stepImageBlock);
+
+                // Actually place all the images:
+                _.each(ible.steps,function(step,index){
+                    var stepImageBlock = $('div.stepImageBlock.step'+index).first();
+                    console.log('placing images for step ',index);
+                    _.each(step.files,function(file){
+                        if (file.image === true) {
+                            var image = $("<img src='" + file.mediumUrl + "' />");
+                            if (!_.isUndefined(stepImageBlock))
+                                stepImageBlock.append(image);
+                        }
+                    });
+                });
+
+                // don't let people escape the explorer
+                $('a').on("click",function(e){
+                    e.preventDefault();
+                });
+            },1000);
+
+        };
+
+        // Fetch the instructable from showInstructable....
+        var url = encodeURIComponent('http://www.instructables.com/json-api/showInstructable?id='+getParameterByName('instructableId'));
+
+        $.ajax({
+            data: 'url=' + url,
+            url: '../ba-simple-proxy.php',
+            method: "GET",
+            dataType: "json",
+            success: function(data){
+                layoutInstructable(data.contents);
+            }
+        });
+    });
+
+</script>
+</html>

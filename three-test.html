@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>LED Dot Matrix Effect</title>
+<meta charset="utf-8">
+<style>
+body {
+background-color: #000;
+margin: 0px;
+overflow: hidden;
+}
+
+#info {
+color: #fff;
+position: absolute;
+bottom: 20px;
+padding: 5px 20px;
+font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+font-weight: 100;
+font-size: 18px;
+background-color: #000;
+}
+
+a{
+color: #DDD;
+}
+
+</style>
+</head>
+<body>
+
+<div id="info">LED Dot Matrix Effect for Three.js by @felixturner</div>
+<div id="container"></div>
+
+<script src="scripts/three.min.js"></script>
+<script src="/THREEJS/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="/THREEJS/examples/js/postprocessing/RenderPass.js"></script>
+<script src="/THREEJS/examples/js/postprocessing/ShaderPass.js"></script>
+
+<script src="/THREEJS/examples/js/postprocessing/MaskPass.js"></script>
+<script src="/THREEJS/examples/js/postprocessing/BloomPass.js"></script>
+<script src="/THREEJS/examples/js/shaders/CopyShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/ConvolutionShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/BrightnessContrastShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/VerticalBlurShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/HorizontalBlurShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/BokehShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/FXAAShader.js"></script>
+<script src="/THREEJS/examples/js/shaders/BlendShader.js"></script>
+
+<script src="THREE-plugins/DotMatrixShader.js"></script>
+<script src="THREE-plugins/AdditiveBlendShader.js"></script>
+
+
+<script>
+
+//LED Dot Matrix Effect
+//renders a 3D scene using the DotMatrixShader
+//then renders another pass with blurring apllied
+//then combine the 2 passes using an Additive Blend Shader
+//using three.js r.52
+//by Felix Turner | www.airtight.cc | @felixturner
+
+var camera, scene, renderer;
+var composer;
+var cubeHolder;
+
+var dotMatrixPass, dotMatrixParams;
+var hblurPass;
+var vblurPass;
+var blendPAss;
+
+var screenW, screenH;
+
+
+init();
+animate();
+
+function init() {
+
+    screenW = window.innerWidth;
+    screenH = window.innerHeight;
+
+    //init three scene
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 20, 3000);
+    camera.position.z = 1000;
+    scene = new THREE.Scene();
+
+    //init object to hold cubes and rotate
+    cubeHolder = new THREE.Object3D();
+    scene.add(cubeHolder);
+
+    //create rotating cubes
+    var geometry = new THREE.CubeGeometry(100, 100, 100);
+    var spread = 2000;
+    for(var j = 0; j < 80; j++) {
+        //random colors w/ additive blend
+        var material = new THREE.MeshBasicMaterial({
+            color:0xFFFFFF*Math.random(),
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            transparent: true
+        });
+        var cube = new THREE.Mesh(geometry, material);
+        //randomize size, posn + rotation
+        cube.scale.x = cube.scale.y = cube.scale.z = Math.random() * 3 + .05;
+        cube.position.x = Math.random() * spread - spread / 2;
+        cube.position.y = Math.random() * spread - spread / 2;
+        cube.position.z = Math.random() * spread - spread / 2;
+        cube.rotation.x = Math.random() * 2 * Math.PI - Math.PI;
+        cube.rotation.y = Math.random() * 2 * Math.PI - Math.PI;
+        cube.rotation.z = Math.random() * 2 * Math.PI - Math.PI;
+        cubeHolder.add(cube);
+    }
+
+    //init renderer
+    renderer = new THREE.WebGLRenderer({});
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    //add stats
+//    stats = new Stats();
+//    stats.domElement.style.position = 'absolute';
+//    stats.domElement.style.top = '0px';
+//    container.appendChild( stats.domElement );
+
+    // POST PROCESSING
+
+    //common render target params
+    var renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBufer: false };
+
+    //Init dotsComposer to render the dots effect
+    //A composer is a stack of shader passes combined
+
+    //a render target is an offscreen buffer to save a composer output
+    renderTargetDots = new THREE.WebGLRenderTarget( screenW, screenH, renderTargetParameters );
+    //dots Composer renders the dot effect
+    dotsComposer = new THREE.EffectComposer( renderer,renderTargetDots );
+
+    var renderPass = new THREE.RenderPass( scene, camera );
+    //a shader pass applies a shader effect to a texture (usually the previous shader output)
+    dotMatrixPass = new THREE.ShaderPass( THREE.DotMatrixShader );
+    dotsComposer.addPass( renderPass );
+    dotsComposer.addPass( dotMatrixPass );
+
+
+    //Init glowComposer renders a blurred version of the scene
+    renderTargetGlow = new THREE.WebGLRenderTarget( screenW, screenH, renderTargetParameters ); //1/2 res for performance
+    glowComposer = new THREE.EffectComposer( renderer, renderTargetGlow );
+
+    //create shader passes
+    hblurPass = new THREE.ShaderPass( THREE.HorizontalBlurShader );
+    vblurPass = new THREE.ShaderPass( THREE.VerticalBlurShader );
+    //fxaa smooths stuff out
+    var fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
+    fxaaPass.uniforms[ 'resolution' ].value.set( 1 / screenW, 1 / screenH );
+
+    glowComposer.addPass( renderPass );
+    glowComposer.addPass( dotMatrixPass );
+    glowComposer.addPass( hblurPass );
+    glowComposer.addPass( vblurPass );
+    //glowComposer.addPass( fxaaPass );
+
+    //blend Composer runs the AdditiveBlendShader to combine the output of dotsComposer and glowComposer
+    blendPass = new THREE.ShaderPass( THREE.AdditiveBlendShader );
+    blendPass.uniforms[ 'tBase' ].value = dotsComposer.renderTarget1;
+    blendPass.uniforms[ 'tAdd' ].value = glowComposer.renderTarget1;
+    blendComposer = new THREE.EffectComposer( renderer );
+    blendComposer.addPass( blendPass );
+    blendPass.renderToScreen = true;
+
+    //////////////
+
+    //Init DAT GUI control panel
+    dotMatrixParams = {
+        spacing: 20.0,
+        size: 2.0,
+        blur: 3.0
+    }
+
+    glowParams = {
+        amount: 4.0,
+        blur: 0.4
+    }
+
+//    var gui = new dat.GUI();
+//
+//    var f1 = gui.addFolder('Dot Matrix');
+//    f1.add(dotMatrixParams, 'spacing', 0, 50).step(1).onChange(onParamsChange);
+//    f1.add(dotMatrixParams, 'size', 0, 10).step(0.1).onChange(onParamsChange);
+//    f1.add(dotMatrixParams, 'blur', 0, 10).step(0.1).onChange(onParamsChange);
+//    f1.open();
+//
+//    var f2 = gui.addFolder('Glow');
+//    f2.add(glowParams, 'amount', 0, 10).step(0.1).onChange(onParamsChange);
+//    f2.add(glowParams, 'blur', 0, 10).step(0.1).onChange(onParamsChange);
+//    f2.open();
+
+    onParamsChange();
+
+}
+
+function onParamsChange() {
+    //copy gui params into shader uniforms
+    dotMatrixPass.uniforms[ "spacing" ].value = dotMatrixParams.spacing;
+    dotMatrixPass.uniforms[ "size" ].value = Math.pow(dotMatrixParams.size,2);
+    dotMatrixPass.uniforms[ "blur" ].value = Math.pow(dotMatrixParams.blur*2,2);
+
+    hblurPass.uniforms[ 'h' ].value = glowParams.blur / screenW*2;
+    vblurPass.uniforms[ 'v' ].value = glowParams.blur  / screenH*2;
+    blendPass.uniforms[ 'amount' ].value = glowParams.amount;
+
+}
+
+function animate() {
+
+    requestAnimationFrame( animate );
+    cubeHolder.rotation.y -= 0.01;
+    cubeHolder.rotation.x += 0.005;
+
+    dotsComposer.render( 0.1 );
+    glowComposer.render( 0.1 );
+    blendComposer.render( 0.1 );
+
+//    stats.update();
+}
+
+</script>
+</body>
+</html>

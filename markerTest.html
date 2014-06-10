@@ -1,0 +1,74 @@
+<html>
+<head>
+    <style type="text/css">
+    body {
+        background-color: #333;
+    }
+
+    .marker {
+        margin: 0px;
+        padding: 0px;
+        height: 60px;
+        display: block;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 10px;
+        position: absolute;
+        top: 50px;
+        left: 20px;
+        background-color: #333;
+        color: white;
+    }
+    .marker .centerer {
+        position: absolute;
+        top: -9px;
+        left: -9px;
+        width: 14px;
+        height: 14px;
+        border-radius: 10px;
+        border: 2px solid white;
+        box-shadow: 0px 0px 4px 2px rgba(255,255,255,0.8);
+    }
+    .marker:after {
+        content:" ";
+        display:block;
+        width: 100%;
+        border-bottom: 2px solid white;
+        box-shadow: 0px 0px 4px 2px rgba(255,255,255,0.5);
+        left: 9px;
+        top: -1px;
+        position: absolute;
+    }
+    .marker .title {
+        position: relative;
+        max-width: 250px;
+        min-width: 80px;
+        left: 10px;
+        margin-left: 5px;
+        margin-top: -16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-shadow: 0px 0px 8px black;
+    }
+    .marker img {
+        right: 0px;
+        margin-right: -8px;
+        position: absolute;
+        top: 1px;
+        max-width: 80px;
+        z-index: 2;
+        box-shadow: 0px 1px 4px 2px rgba(255,255,255,0.8);
+    }
+    </style>
+</head>
+<body>
+
+<div class="marker">
+    <div class="title">Project Description will go here</div>
+    <div class="centerer"></div>
+    <img src="http://cdn.instructables.com/F4R/CVPV/HTBY6URQ/F4RCVPVHTBY6URQ.THUMB.jpg" class="coverImage" />
+</div>
+
+</div>
+</body>
+</html>
