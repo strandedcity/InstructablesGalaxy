@@ -1,7 +1,7 @@
 InstructablesGalaxy
 ===================
 
-Instructables Universe in Three.js
+WebGL Application Showing the content of Instructables as 150,000 interrelated stars
 
 This repo contains the code for the final version of the Instructables Galaxy.
 
