@@ -7,7 +7,7 @@ This repo contains the code for the final version of the Instructables Galaxy.
 
 The story of the making: http://www.instructables.com/id/Instructables-Universe-in-Threejs/
 
-The live project: http://phil-seaton.com/instructables/explorer/explore.php
+The live project: http://phil-seaton.com/instructables/explorer/explore.php?TARGET=web
 
 Please note that I've made a couple changes to the way the code here is accessible:
 1) Email-an-Instructable has been omitted
