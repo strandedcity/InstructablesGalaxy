@@ -3,6 +3,20 @@
 <head>
     <title>Galaxy of Instructables</title>
     <script type="text/javascript">
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (decodeURIComponent(pair[0]) == variable) {
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        console.log('Query variable %s not found', variable);
+    }
+    window.DEBUG = getQueryVariable('DEBUG'),
+    window.TARGET =getQueryVariable('TARGET');
+
     paceOptions = {
         restartOnRequestAfter: false,
         ajax: true
@@ -114,22 +128,23 @@
         </div>
     </script>
 </head>
+<body>
+
 <!-- allow right-clicks only for debug mode -->
-<?php
-    if ($_GET["DEBUG"] == "true") {
+<script type="text/javascript">
+    if (DEBUG === "true") {
         // debug allows context menu and cursor to show
-        echo '<script>window.TARGET = "none";</script>';
-        echo '<body> ';
-    } else if ($_GET["TARGET"] == "web") {
+        window.TARGET = "none";
+    } else if (window.TARGET === "web") {
         // web allows cursor but no context menu
-        echo '<script>window.TARGET = "web";</script>';
-        echo '<body> ';
+        window.TARGET = "web";
     } else {
         // touch screen
-        echo '<script>window.TARGET = "touch";</script>';
-        echo '<body class="hiddenCursor" oncontextmenu="return false;"> ';
+        window.TARGET = "touch";
+        document.body.className += 'hiddenCursor';
+        document.body.oncontextmenu = function(e){return false;}
     }
-?>
+</script>
 <div id="container"></div>
 <canvas id="three-canvas" style="width: 100%; height: 100%;"></canvas>
 
@@ -137,13 +152,11 @@
     Pace.on('done', function(){Pace.off();});
 
     var scriptsList = [];
-    <?php
-        if ($_GET["DEBUG"] == "true") {
-            echo 'scriptsList.push("/THREEJS/build/three.min.js");';
-        } else {
-            echo 'scriptsList.push("scripts/three.min.js");';
-        }
-    ?>
+    if (window.DEBUG === "true") {
+        scriptsList.push("/THREEJS/build/three.min.js");
+    } else {
+        scriptsList.push("scripts/three.min.js");
+    }
 
     scriptsList.push("https://www.youtube.com/iframe_api"); // iframe player, to support custom touch action for youtube vid's
     scriptsList.push("THREE-plugins/shaders/CopyShader.js");
@@ -168,30 +181,28 @@
     scriptsList.push("bootstrap/js/bootstrap.min.js");
     scriptsList.push("scripts/jquery.cycle2.min.js");
 
-<?php
-    $r = rand ( 0,999999 );
-    $params = "";
-    if ($_GET["DEBUG"] == "true") {
-        $params = "?small=true&v=".$r;
+    var r = Math.random();
+    var params = "";
+    if (window.DEBUG === "true") {
+        params = "?small=true&v=" + r;
     }
-?>
-    scriptsList.push("scripts/galaxy/galaxy_settings.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_utils.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/kinetic_skyNode.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_skyLayouter.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_skymap.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_cursor.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_toolbar.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_interactions.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_cameraMotions.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_projectTagManager.js<?php echo $params; ?>");
-    scriptsList.push("scripts/galaxy/galaxy_constellationMaker3D.js<?php echo $params; ?>");
 
-    <?php
-        echo 'scriptsList.push("DATA/data.php'.$params.'");';
-        echo 'scriptsList.push("scripts/galaxy/galaxy_main.js'.$params.'");';
-        echo 'head.load(scriptsList);';
-    ?>
+    scriptsList.push("scripts/galaxy/galaxy_settings.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_utils.js"+params);
+    scriptsList.push("scripts/galaxy/kinetic_skyNode.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_skyLayouter.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_skymap.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_cursor.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_toolbar.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_interactions.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_cameraMotions.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_projectTagManager.js"+params);
+    scriptsList.push("scripts/galaxy/galaxy_constellationMaker3D.js"+params);
+    
+    scriptsList.push("DATA/data.php" + params);
+    scriptsList.push("scripts/galaxy/galaxy_main.js" + params);
+    head.load(scriptsList);
+    
     </script>
 
 <!-- Main start script initializes both the webgl and canvas environments, including all the data preparation and necessaries -->
