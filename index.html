@@ -15,7 +15,8 @@
         console.log('Query variable %s not found', variable);
     }
     window.DEBUG = getQueryVariable('DEBUG'),
-    window.TARGET =getQueryVariable('TARGET');
+    window.TARGET = 'web';
+    // window.TARGET =getQueryVariable('TARGET');
 
     paceOptions = {
         restartOnRequestAfter: false,
