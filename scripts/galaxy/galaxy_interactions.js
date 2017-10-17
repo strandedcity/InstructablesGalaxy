@@ -233,7 +233,7 @@ Galaxy.InteractionHandler.prototype = {
 
         $.ajax({
             method: "GET",
-            url: 'https://cors-anywhere.herokuapp.com/http://www.instructables.com/json-api/searchInstructables?limit=45&featured=true&type=id&search='+encodeURIComponent(query),
+            url: 'https://monitoring.strandedcity.com/cors.php?http://www.instructables.com/json-api/searchInstructables?limit=45&featured=true&type=id&search='+encodeURIComponent(query),
             success: function(data){
                 // requested 45 results in case some of those aren't in the starsystem:
                 var highlightedIbles = [], highlightedAlternate = {};
@@ -505,7 +505,7 @@ Galaxy.InteractionHandler.prototype = {
 
         // fetch full instructable, display in callback:
         $.ajax({
-            url: 'https://cors-anywhere.herokuapp.com/http://www.instructables.com/json-api/showInstructable?id=' + projectId,
+            url: 'https://monitoring.strandedcity.com/cors.php?http://www.instructables.com/json-api/showInstructable?id=' + projectId,
             success: function(jsonData){
                 var body = jsonData.body || jsonData.steps[0].body;
                 jsonData.annotationText = that.screenBodyText(body);
