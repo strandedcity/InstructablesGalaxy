@@ -233,7 +233,7 @@ Galaxy.InteractionHandler.prototype = {
 
         $.ajax({
             method: "GET",
-            url: 'https://monitoring.strandedcity.com/cors.php?http://www.instructables.com/json-api/searchInstructables?limit=45&featured=true&type=id&search='+encodeURIComponent(query),
+            url: 'https://cors.phil-seaton.com/search/'+encodeURIComponent(query),
             success: function(data){
                 // requested 45 results in case some of those aren't in the starsystem:
                 var highlightedIbles = [], highlightedAlternate = {};
