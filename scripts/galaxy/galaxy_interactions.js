@@ -505,7 +505,7 @@ Galaxy.InteractionHandler.prototype = {
 
         // fetch full instructable, display in callback:
         $.ajax({
-            url: 'https://monitoring.strandedcity.com/cors.php?http://www.instructables.com/json-api/showInstructable?id=' + projectId,
+            url: 'https://cors.phil-seaton.com/instructable/id/' + projectId,
             success: function(jsonData){
                 var body = jsonData.body || jsonData.steps[0].body;
                 jsonData.annotationText = that.screenBodyText(body);
